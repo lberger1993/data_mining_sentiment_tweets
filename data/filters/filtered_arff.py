@@ -6,14 +6,14 @@ positive_word_list = list()
 
 
 def get_negative_words():
-    for line in open('/Users/luciaeve/Documents/EMSE/code/data_mining_sentiment_tweets/data/filters/data/negative.txt'):
+    for line in open('data/negative.txt'):
         line = line.replace('\n', "")
         negative_word_list.append(line)
     return negative_word_list
 
 
 def get_positive_words():
-    for line in open('/Users/luciaeve/Documents/EMSE/code/data_mining_sentiment_tweets/data/filters/data/positive.txt'):
+    for line in open('data/positive.txt'):
         line = line.replace('\n', "")
         positive_word_list.append(line)
     return positive_word_list
