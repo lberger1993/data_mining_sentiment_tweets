@@ -10,9 +10,8 @@ def remove_stop_words(df):
 
 def count_words(df):
     totals = collections.Counter(i for i in list(itertools.chain.from_iterable(df['tweet'])))
-    print(totals)
-    # with open('data/system_generated/most_common_words.json', 'w') as outfile:
-    #     json.dump(dict(totals.most_common()), outfile)
+    with open('data/system_generated/most_common_words.json', 'w') as outfile:
+        json.dump(dict(totals.most_common()), outfile)
     return totals
 
 
@@ -34,23 +33,27 @@ def print_arff(tweets, attributes, attr_count, file_name):
         file.write("@attribute tweetID numeric\n")
         for item in attributes:
             file.write("@attribute '%s' {'n', 'y'}\n" % item[0])
-        file.write("@attribute 's_label' {'0','1','2','4'}")
+        file.write("@attribute @@class@@ {'0','4'}")
         file.write("\n@data\n")
+
         for index, row in tweets.iterrows():
-            line = "%d" % row['other']
+            line = "%s" % str(row['id'])
             for item in attributes:
                 if item[0] in row['tweet']:
                     line += ", 'y'"
                 else:
                     line += ", 'n'"
-            line += ", %s" % str(row['id'])
+            line += ", '%s'" % str(row['label'])
             line += "\n"
             file.write(line)
+
             # print(row['other'],row['tweet'])
 
 # testing
-all_tweets = pd.DataFrame.from_csv('data/tweets.csv', index_col=None)
+all_tweets = pd.DataFrame.from_csv('data/test25000.csv', index_col=None, encoding="utf-8")
+print(all_tweets['label'])
+print(all_tweets['tweet'])
 all_tweets['tweet'] = all_tweets['tweet'].str.lower().str.replace('[^\w\s]', '').str.split()
 all_tweets = remove_stop_words(all_tweets)
 topWords = count_words(all_tweets).most_common(int(500))
-print_arff(all_tweets, topWords, 'unfiltered', 500)
+print_arff(all_tweets, topWords, 'large_ds', 500)
